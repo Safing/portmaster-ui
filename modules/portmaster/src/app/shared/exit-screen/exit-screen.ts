@@ -1,9 +1,11 @@
 import { AnimationEvent } from '@angular/animations';
 import { OverlayRef } from '@angular/cdk/overlay';
 import { Component, HostBinding, HostListener, Inject, InjectionToken, NgZone } from '@angular/core';
+import { Observable, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { UIStateService } from 'src/app/services';
 import { fadeInAnimation, fadeOutAnimation } from '../animations';
+import { DialogRef, DIALOG_REF } from '../dialog';
 
 export const OVERLAYREF = new InjectionToken<OverlayRef>('OverlayRef');
 
@@ -17,33 +19,23 @@ export const OVERLAYREF = new InjectionToken<OverlayRef>('OverlayRef');
 })
 export class ExitScreenComponent {
   constructor(
-    @Inject(OVERLAYREF) private _overlayRef: OverlayRef,
+    @Inject(DIALOG_REF) private _dialogRef: DialogRef<any>,
     private stateService: UIStateService,
   ) { }
 
-  @HostBinding('@fadeIn')
-  @HostBinding('@fadeOut')
-  animated = true;
-
+  /** @private - used as ngModel form the template */
   neveragain: boolean = false;
 
-  @HostListener('@fadeOut.done', ['$event'])
-  onAnimationEnd(event: AnimationEvent) {
-    if (event.toState !== 'void') {
-      return;
-    }
-
-    this._overlayRef.dispose();
-    if (this.shouldExit) {
-      window.app.exitApp();
-    }
-  }
-
-  private shouldExit = false;
-
   closeUI() {
+    const closeObserver = {
+      next: () => {
+        this._dialogRef.close('exit');
+      }
+    }
+
+    let close: Observable<any> = of(null);
     if (this.neveragain) {
-      this.stateService.uiState()
+      close = this.stateService.uiState()
         .pipe(
           map(state => {
             state.hideExitScreen = true;
@@ -51,17 +43,11 @@ export class ExitScreenComponent {
           }),
           switchMap(state => this.stateService.saveState(state)),
         )
-        .subscribe(() => {
-          this.shouldExit = true;
-          this._overlayRef.detach();
-        });
-    } else {
-      this.shouldExit = true;
-      this._overlayRef.detach();
     }
+    close.subscribe(closeObserver)
   }
 
   cancel() {
-    this._overlayRef.detach();
+    this._dialogRef.close()
   }
 }

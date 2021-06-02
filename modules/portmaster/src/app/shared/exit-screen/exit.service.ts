@@ -1,12 +1,11 @@
 import { Overlay } from '@angular/cdk/overlay';
 import { ComponentPortal, ComponentType } from '@angular/cdk/portal';
-import { Inject, Injectable, Injector, NgZone } from '@angular/core';
+import { Injectable, Injector } from '@angular/core';
 import { of } from 'rxjs';
-import { catchError, take, timeout } from 'rxjs/operators';
+import { catchError, take, takeUntil, timeout } from 'rxjs/operators';
 import { UIStateService } from 'src/app/services';
 import { PortapiService } from 'src/app/services/portapi.service';
-import { ActionIndicatorService } from '../action-indicator';
-import { ExitConfirmComponent } from './exit-confirm';
+import { DialogService } from '../dialog';
 import { ExitScreenComponent, OVERLAYREF } from './exit-screen';
 
 @Injectable({ providedIn: 'root' })
@@ -14,10 +13,9 @@ export class ExitService {
   private hasOverlay = false;
 
   constructor(
-    private overlay: Overlay,
-    private injector: Injector,
     private stateService: UIStateService,
     private portapi: PortapiService,
+    private dialog: DialogService
   ) {
     if (!!window.app) {
       this.portapi.sub('runtime:modules/core/event/shutdown')
@@ -43,62 +41,33 @@ export class ExitService {
             if (state?.hideExitScreen) {
               window.app.exitApp();
             }
+            if (this.hasOverlay) {
+              return;
+            }
+            this.hasOverlay = true;
 
-            this.createOverlay(ExitScreenComponent);
+            this.dialog.create(ExitScreenComponent, { autoclose: true })
+              .onAction('exit', () => window.app.exitApp())
+              .onClose.subscribe(() => this.hasOverlay = false);
           })
       }
     })
   }
 
   shutdownPortmaster() {
-    this.createOverlay(ExitConfirmComponent);
-  }
-
-  private createOverlay(type: ComponentType<any>) {
-    if (this.hasOverlay) {
-      return;
-    }
-
-    this.hasOverlay = true;
-    const overlayref = this.overlay.create({
-      positionStrategy: this.overlay.position()
-        .global()
-        .centerHorizontally()
-        .centerVertically(),
-      hasBackdrop: true,
-      backdropClass: 'exit-screen-backdrop',
-    });
-
-    // prevent multiple exit-dialogs to be displayed
-    overlayref.detachments().pipe(take(1))
-      .subscribe(() => this.hasOverlay = false);
-
-    // we only detach() the overlayref on outside pointer events
-    // or Escape keydown events because the ExitScreenComponent will
-    // dispose() the overlayref when the detachment is done.
-
-    overlayref.outsidePointerEvents()
-      .pipe(take(1))
-      .subscribe(() => overlayref.detach())
-
-    overlayref.keydownEvents()
-      .subscribe(event => {
-        if (event.key === 'Escape') {
-          overlayref.detach();
-        }
-      });
-
-    const inj = Injector.create({
-      providers: [
+    this.dialog.confirm({
+      canCancel: true,
+      header: 'Shutting Down Portmaster',
+      message: 'Shutting down the Portmaster will stop all Portmaster components and will leave your system unprotected!',
+      caption: 'Caution',
+      buttons: [
         {
-          provide: OVERLAYREF,
-          useValue: overlayref,
+          id: 'shutdown',
+          danger: true,
+          text: 'Shut Down Portmaster'
         }
-      ],
-      parent: this.injector,
+      ]
     })
-
-    const portal = new ComponentPortal(type, undefined, inj);
-    portal.attach(overlayref);
+      .onAction('shutdown', () => this.portapi.shutdownPortmaster())
   }
 }

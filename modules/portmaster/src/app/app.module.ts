@@ -62,7 +62,7 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
 import { ConnectionsViewComponent, ScopeGroupContentComponent, UngroupedConnectionContentComponent, UngroupedConnectionRowComponent, ConnectionExpertisePipe, ConnectionLocationPipe, CanUseRulesPipe, IsBlockedConnectionPipe } from './shared/connections-view';
 import { IndicatorComponent } from './shared/action-indicator';
 import { ExitScreenComponent } from './shared/exit-screen/exit-screen';
-import { ExitConfirmComponent } from './shared/exit-screen';
+import { ConfirmDailogComponent, DialogComponent } from './shared/dialog';
 
 @NgModule({
   declarations: [
@@ -135,7 +135,8 @@ import { ExitConfirmComponent } from './shared/exit-screen';
     IsBlockedConnectionPipe,
     IndicatorComponent,
     ExitScreenComponent,
-    ExitConfirmComponent,
+    DialogComponent,
+    ConfirmDailogComponent,
   ],
   imports: [
     BrowserModule,

@@ -1,0 +1,14 @@
+<div class="content-wrapper">
+  <caption *ngIf="config.caption">{{config.caption}}</caption>
+  <fa-icon *ngIf="config.canCancel" class="close-icon" icon="times" (click)="select()"></fa-icon>
+
+  <h1 *ngIf="config.header">{{config.header}}</h1>
+
+  <span class="message" *ngIf="config.message">{{ config.message }}</span>
+
+  <div class="actions" *ngIf="!!config.buttons">
+    <span></span>
+    <button *ngFor="let button of config.buttons" (click)="select(button.id)" type="button"
+      [class.danger]="button.danger">{{button.text}}</button>
+  </div>
+</div>
