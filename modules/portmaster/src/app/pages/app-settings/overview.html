@@ -32,7 +32,7 @@
   <ng-template #profileList let-list>
     <ng-container *ngFor="let profile of list; trackBy: trackProfile">
       <div *appExpertiseLevel="profile.Internal ? 'developer' : 'user'" class="card-header"
-        [routerLink]="['..', profile.Source,  profile.ID]">
+        [routerLink]="['/app', profile.Source,  profile.ID]">
         <app-icon [profile]="profile"></app-icon>
         <span class="card-title">
           <span [innerHTML]="profile?.Name | safe:'html'"></span>
