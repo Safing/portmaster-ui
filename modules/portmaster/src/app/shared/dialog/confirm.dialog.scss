@@ -48,14 +48,25 @@ caption {
     margin-top     : 1rem;
     width          : 100%;
     display        : flex;
-    justify-content: space-between;
+    justify-content: flex-end;
     align-items    : center;
 
     button {
-      @apply bg-info-blue;
+      &:not(:last-child) {
+        margin-right: 0.5rem;
+      }
+
+      &:not(.outline) {
+        @apply bg-info-blue;
+      }
 
       &.danger {
         @apply bg-info-red;
+      }
+
+      &.outline {
+        @apply border;
+        @apply border-buttons-dark;
       }
     }
 

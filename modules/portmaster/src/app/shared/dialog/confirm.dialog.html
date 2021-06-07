@@ -7,8 +7,7 @@
   <span class="message" *ngIf="config.message">{{ config.message }}</span>
 
   <div class="actions" *ngIf="!!config.buttons">
-    <span></span>
     <button *ngFor="let button of config.buttons" (click)="select(button.id)" type="button"
-      [class.danger]="button.danger">{{button.text}}</button>
+      class="{{button.class}}">{{button.text}}</button>
   </div>
 </div>

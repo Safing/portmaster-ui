@@ -4,7 +4,7 @@ import { DialogRef, DIALOG_REF } from './dialog.ref';
 export interface ConfirmDialogButton {
   text: string;
   id: string;
-  danger?: boolean;
+  class?: 'danger' | 'outline';
 }
 
 export interface ConfirmDialogConfig {

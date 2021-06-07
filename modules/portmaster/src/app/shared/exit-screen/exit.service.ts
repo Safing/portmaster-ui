@@ -63,7 +63,7 @@ export class ExitService {
       buttons: [
         {
           id: 'shutdown',
-          danger: true,
+          class: 'danger',
           text: 'Shut Down Portmaster'
         }
       ]
