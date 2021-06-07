@@ -54,11 +54,6 @@ h1 {
       &:hover {
         opacity: 1;
       }
-
-      &.confirm {
-        @apply bg-info-red;
-        color: white;
-      }
     }
   }
 }

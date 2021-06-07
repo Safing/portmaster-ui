@@ -8,6 +8,7 @@ import { ConnTracker, InspectedProfile } from 'src/app/services/connection-track
 import { ActionIndicatorService } from 'src/app/shared/action-indicator';
 import { fadeInAnimation, fadeOutAnimation } from 'src/app/shared/animations';
 import { SaveSettingEvent } from 'src/app/shared/config/generic-setting/generic-setting';
+import { DialogService } from 'src/app/shared/dialog';
 
 @Component({
   templateUrl: './app-settings.html',
@@ -59,12 +60,6 @@ export class AppSettingsPageComponent implements OnInit, OnDestroy {
 
   /**
    * @private
-   * Wether or not we are waiting for a confirmation to delete the profile.
-   */
-  pendingDeleteConfirmation = false;
-
-  /**
-   * @private
    *
    * Defines what "view" we are currently in
    */
@@ -95,7 +90,8 @@ export class AppSettingsPageComponent implements OnInit, OnDestroy {
     private connTrack: ConnTracker,
     private configService: ConfigService,
     private router: Router,
-    private actionIndicator: ActionIndicatorService
+    private actionIndicator: ActionIndicatorService,
+    private dialog: DialogService,
   ) { }
 
   /**
@@ -215,8 +211,6 @@ export class AppSettingsPageComponent implements OnInit, OnDestroy {
                 return setting.Value !== undefined;
               });
 
-            // make sure the user needs to confirm delete again
-            this.pendingDeleteConfirmation = false;
           } else {
             // there's no profile to view so tell the connection-tracker
             // to stop watching the previous one.
@@ -239,18 +233,23 @@ export class AppSettingsPageComponent implements OnInit, OnDestroy {
       return;
     }
 
-    // set pending-confirmation so the user needs to click again.
-    if (!this.pendingDeleteConfirmation) {
-      this.pendingDeleteConfirmation = true;
-      return;
-    }
-
-    this.profileService.deleteProfile(this.appProfile)
-      .subscribe(() => {
-        this.pendingDeleteConfirmation = false;
-        this.router.navigate(['/app/overview'])
-        this.actionIndicator.success('Profile Deleted', 'Successfully deleted profile '
-          + this.appProfile?.Name);
+    this.dialog.confirm({
+      canCancel: true,
+      caption: 'Caution',
+      header: 'Deleting Profile ' + this.appProfile.Name,
+      message: 'Do you really want to delete this profile? All settings will be lost.',
+      buttons: [
+        { id: '', text: 'Cancel', class: 'outline' },
+        { id: 'delete', class: 'danger', text: 'Yes, delete it' },
+      ]
+    })
+      .onAction('delete', () => {
+        this.profileService.deleteProfile(this.appProfile!)
+          .subscribe(() => {
+            this.router.navigate(['/app/overview'])
+            this.actionIndicator.success('Profile Deleted', 'Successfully deleted profile '
+              + this.appProfile?.Name);
+          })
       })
   }
 }

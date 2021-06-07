@@ -24,8 +24,8 @@
         </div>
 
         <div *ngIf="!!appProfile" class="delete-profile-container">
-          <button [class.confirm]="pendingDeleteConfirmation" (click)="deleteProfile()">
-            {{ pendingDeleteConfirmation ? 'Confirm Deletion?' : 'Delete Profile' }}
+          <button (click)="deleteProfile()">
+            Delete Profile
           </button>
         </div>
       </h1>
