@@ -4,8 +4,9 @@
   @apply p-6;
   @apply bg-cards-secondary;
   @apply rounded;
-  width   : 20rem;
-  position: relative;
+  min-width: 20rem;
+  width    : fit-content;
+  position : relative;
 }
 
 #drag-handle {

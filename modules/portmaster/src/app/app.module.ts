@@ -10,6 +10,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FaIconLibrary, FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { far } from '@fortawesome/free-regular-svg-icons';
 import { fas } from '@fortawesome/free-solid-svg-icons';
+import { faGithub } from '@fortawesome/free-brands-svg-icons';
 import { MarkdownModule } from 'ngx-markdown';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -63,6 +64,8 @@ import { ConnectionsViewComponent, ScopeGroupContentComponent, UngroupedConnecti
 import { IndicatorComponent } from './shared/action-indicator';
 import { ExitScreenComponent } from './shared/exit-screen/exit-screen';
 import { ConfirmDailogComponent, DialogComponent } from './shared/dialog';
+import { SupportPageComponent } from './pages/support';
+import { SupportFormComponent } from './pages/support/form';
 
 @NgModule({
   declarations: [
@@ -137,6 +140,8 @@ import { ConfirmDailogComponent, DialogComponent } from './shared/dialog';
     ExitScreenComponent,
     DialogComponent,
     ConfirmDailogComponent,
+    SupportPageComponent,
+    SupportFormComponent,
   ],
   imports: [
     BrowserModule,
@@ -209,5 +214,6 @@ import { ConfirmDailogComponent, DialogComponent } from './shared/dialog';
 export class AppModule {
   constructor(library: FaIconLibrary) {
     library.addIconPacks(fas, far);
+    library.addIcons(faGithub)
   }
 }

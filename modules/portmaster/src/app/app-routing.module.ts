@@ -4,6 +4,8 @@ import { SettingsComponent } from './pages/settings/settings';
 import { WidgetSettingsOutletComponent } from './pages/widget-settings-outlet/widget-settings-outlet';
 import { MonitorPageComponent } from './pages/monitor';
 import { AppSettingsPageComponent } from './pages/app-settings';
+import { SupportPageComponent } from './pages/support';
+import { SupportFormComponent } from './pages/support/form';
 
 const routes: Routes = [
   {
@@ -43,6 +45,14 @@ const routes: Routes = [
   {
     path: 'widget/edit/:widgetId',
     component: WidgetSettingsOutletComponent,
+  },
+  {
+    path: 'support',
+    component: SupportPageComponent,
+  },
+  {
+    path: 'support/:id',
+    component: SupportFormComponent,
   },
   {
     path: '**',

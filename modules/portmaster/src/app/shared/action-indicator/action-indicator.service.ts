@@ -179,14 +179,14 @@ export class ActionIndicatorService {
     }
 
     if (typeof msg === 'object') {
-      if ('toString' in msg) {
-        return msg.toString();
-      }
       if ('message' in msg) {
         return msg.message;
       }
       if ('error' in msg) {
         return this.ensureMessage(msg.error);
+      }
+      if ('toString' in msg) {
+        return msg.toString();
       }
     }
 
@@ -238,7 +238,9 @@ export class ActionIndicatorService {
 
     const ct = resp.headers.get('content-type') || '';
     if (/application\/json/.test(ct)) {
-      console.log(msg);
+      if (!!body) {
+        msg = body;
+      }
     } else if (/text\/plain/.test(ct)) {
       msg = body;
     }

@@ -4,4 +4,5 @@ export const environment = {
   //httpAPI: "/api",
   portAPI: "ws://127.0.0.1:817/api/database/v1",
   httpAPI: "http://127.0.0.1:817/api",
+  supportHub: "https://support.safing.io"
 };

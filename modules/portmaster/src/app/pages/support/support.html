@@ -1,0 +1,24 @@
+<div class="header">
+  <h4 class="breadcrumbs">
+    <span>Get Help</span>
+  </h4>
+  <app-expertise></app-expertise>
+</div>
+
+<div class="list-container" [@fadeIn]="true">
+  <div *ngFor="let section of supportTypes" class="page-section">
+    <div *ngIf="!!section.title" class="section-title">
+      <h4>{{section.title}}</h4>
+    </div>
+
+    <div class="option-list">
+      <section *ngFor="let item of section.choices" (click)="openPage(item)" [@fadeInList]="section.choices.length">
+        <fa-icon *ngIf="!!item.type" icon="external-link-alt"></fa-icon>
+
+        <h3>{{item.title}}</h3>
+        <label *ngIf="!item.type" class="secondary-text">{{ item.shortHelp || item.prologue}}</label>
+        <label *ngIf="item.type" class="secondary-text">{{ item.shortHelp}}</label>
+      </section>
+    </div>
+  </div>
+</div>

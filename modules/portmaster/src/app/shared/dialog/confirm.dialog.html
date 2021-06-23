@@ -6,6 +6,9 @@
 
   <span class="message" *ngIf="config.message">{{ config.message }}</span>
 
+  <input *ngIf="!!config.inputType" [attr.type]="config.inputType" [(ngModel)]="config.inputModel"
+    [attr.placeholder]="config.inputPlaceholder || null">
+
   <div class="actions" *ngIf="!!config.buttons">
     <button *ngFor="let button of config.buttons" (click)="select(button.id)" type="button"
       class="{{button.class}}">{{button.text}}</button>

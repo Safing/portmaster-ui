@@ -5,7 +5,7 @@ import { Pipe, PipeTransform } from '@angular/core';
   pure: true
 })
 export class TimeAgoPipe implements PipeTransform {
-  transform(value: number, ticker: any): string {
+  transform(value: number | Date, ticker?: any): string {
     const formats = [
       { ceiling: 1, text: "" },
       { ceiling: 60, text: "sec" },
@@ -15,6 +15,10 @@ export class TimeAgoPipe implements PipeTransform {
       { ceiling: 31556926, text: "month" },
       { ceiling: Infinity, text: "year" }
     ];
+
+    if (value instanceof Date) {
+      value = value.valueOf() / 1000;
+    }
 
     let diffInSeconds = Math.floor(((new Date()).valueOf() - (value * 1000)) / 1000);
     for (let i = formats.length - 1; i >= 0; i--) {

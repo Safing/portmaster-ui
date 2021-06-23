@@ -12,3 +12,4 @@ export * from './debug-api.service';
 export * from './meta-api.service';
 export * from './session-data.service';
 export * from './ui-state.service';
+export * from './supporthub.service';

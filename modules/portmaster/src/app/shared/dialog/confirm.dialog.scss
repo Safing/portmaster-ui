@@ -30,6 +30,12 @@ caption {
     font-size: 0.75rem;
     flex-grow: 1;
     opacity  : .6;
+    max-width: 300px;
+  }
+
+  .message~input {
+    margin-top: 0.5rem;
+    font-size : 95%;
   }
 
   .close-icon {

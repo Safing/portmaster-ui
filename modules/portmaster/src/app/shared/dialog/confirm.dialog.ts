@@ -13,6 +13,9 @@ export interface ConfirmDialogConfig {
   header?: string;
   message?: string;
   caption?: string;
+  inputType?: 'text' | 'password';
+  inputModel?: string;
+  inputPlaceholder?: string;
 }
 
 export const CONFIRM_DIALOG_CONFIG = new InjectionToken<ConfirmDialogConfig>('ConfirmDialogConfig');
@@ -26,7 +29,11 @@ export class ConfirmDailogComponent {
   constructor(
     @Inject(DIALOG_REF) private dialogRef: DialogRef<any>,
     @Inject(CONFIRM_DIALOG_CONFIG) public config: ConfirmDialogConfig,
-  ) { }
+  ) {
+    if (config.inputType !== undefined && config.inputModel === undefined) {
+      config.inputModel = '';
+    }
+  }
 
   select(action?: string) {
     this.dialogRef.close(action || null);
